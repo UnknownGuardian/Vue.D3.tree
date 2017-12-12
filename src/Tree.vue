@@ -6,7 +6,7 @@
 import resize from 'vue-resize-directive'
 import euclidean from './euclidean-layout'
 import circular from './circular-layout'
-import {compareString, anchorTodx, drawLink, toPromise, findInParents, mapMany, removeTextAndGraph, translate} from './d3-utils'
+import {compareString, anchorTodx, anchorTody, drawLink, toPromise, findInParents, mapMany, removeTextAndGraph, translate} from './d3-utils'
 
 import * as d3 from 'd3'
 
@@ -176,14 +176,26 @@ export default {
 
       const updateLinks = links.enter().append('path').attr('class', 'linktree')
       const node = this.internaldata.g.selectAll('.nodetree').data(root.descendants(), d => d.id)
-      const newNodes = node.enter().append('g').attr('class', 'nodetree')
+      const newNodes = node.enter().append('g').attr('class', 'nodetree').attr('data-extraclass3', d => (d.data.classes || []).join(' '))
       const allNodes = newNodes.merge(node)
 
       removeTextAndGraph(node)
 
       const text = allNodes.append('text')
         .attr('dy', '.35em')
+        // .attr('data-extraclass2', d => (d.data.classes || []).join(' '))
         .text(d => d.data[this.nodeText])
+        .on('click', d => {
+          currentSelected = (currentSelected === d) ? null : d
+          d3.event.stopPropagation()
+          this.redraw()
+          this.$emit('clicked', {element: d, data: d.data})
+        })
+
+      // added by matt
+      const img = allNodes.append('svg:image')
+        .attr('dy', '.35em')
+        .attr('xlink:href', d => d.data.image || '')
         .on('click', d => {
           currentSelected = (currentSelected === d) ? null : d
           d3.event.stopPropagation()
@@ -205,6 +217,9 @@ export default {
         .classed('selected', d => d === currentSelected)
         .on('click', this.onNodeClick)
 
+      // added by Matt
+      allNodes.attr('data-extraclass', d => (d.data.classes || []).join(' '))
+
       const allNodesPromise = toPromise(allNodes.transition().duration(this.duration)
         .attr('transform', d => translate(d, this.layout))
         .attr('opacity', 1))
@@ -215,15 +230,33 @@ export default {
           .attr('dx', function (d) { return d.textInfo ? anchorTodx(d.textInfo.anchor, this) : 0 })
           .attr('transform', d => 'rotate(' + (d.textInfo ? d.textInfo.rotate : 0) + ')')
 
-      const {transformText} = this.layout
+      // added by Matt
+      img.attr('x', d => { return d.imgInfo ? d.imgInfo.x : 0 })
+          .attr('y', d => { return d.imgInfo ? d.imgInfo.y : 0 })
+          .attr('width', 64)
+          .attr('height', 64)
+          .attr('dx', function (d) { return d.imgInfo ? anchorTodx(d.imgInfo.anchor, this) : 0 })
+          .attr('dy', function (d) { return d.imgInfo ? anchorTody(d.imgInfo.anchor, this) : 0 })
+          .attr('transform', d => 'rotate(' + (d.imgInfo ? d.imgInfo.rotate : 0) + ')')
+
+      const {transformText, transformImage} = this.layout
       allNodes.each((d) => {
         d.textInfo = transformText(d, hasChildren(d))
+        d.imgInfo = transformImage(d, hasChildren(d))
       })
 
       const textTransition = toPromise(text.transition().duration(this.duration)
           .attr('x', d => d.textInfo.x)
           .attr('dx', function (d) { return anchorTodx(d.textInfo.anchor, this) })
           .attr('transform', d => `rotate(${d.textInfo.rotate})`))
+
+      // added by Matt
+      const imgTransition = toPromise(img.transition().duration(this.duration)
+          .attr('x', d => d.imgInfo.x)
+          .attr('y', d => d.imgInfo.y)
+          .attr('dx', function (d) { return anchorTodx(d.imgInfo.anchor, this) })
+          .attr('dy', function (d) { return anchorTody(d.imgInfo.anchor, this) })
+          .attr('transform', d => `rotate(${d.imgInfo.rotate})`))
 
       allNodes.each((d) => {
         d.x0 = d.x
@@ -241,7 +274,7 @@ export default {
       const last = Math.max(...extremeNodes.map(node => node.getComputedTextLength())) + 6
       const first = text.node().getComputedTextLength() + 6
       if (last <= this.maxTextLenght.last && first <= this.maxTextLenght.first) {
-        return Promise.all([allNodesPromise, exitingNodesPromise, textTransition, updateAndNewLinksPromise, exitingLinksPromise])
+        return Promise.all([allNodesPromise, exitingNodesPromise, textTransition, imgTransition, updateAndNewLinksPromise, exitingLinksPromise])
       }
 
       this.maxTextLenght = {first, last}

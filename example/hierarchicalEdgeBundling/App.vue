@@ -50,6 +50,7 @@
 
     <event-logger :events="events"/>
 
+
   </div>
  
    <div class="col-md-9 panel panel-default">

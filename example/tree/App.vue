@@ -205,4 +205,16 @@ export default {
   text-align: left;
 }
 
+g[data-extraclass3="red"], 
+g[data-extraclass3="red"] text,
+.treeclass g.nodetree[data-extraclass3="red"] circle {
+  fill: red;
+}
+
+g[data-extraclass3="green"], 
+g[data-extraclass3="green"] text,
+.treeclass g.nodetree[data-extraclass3="green"] circle {
+  fill: green;
+}
+
 </style>

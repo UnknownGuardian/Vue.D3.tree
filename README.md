@@ -145,7 +145,7 @@ export default {
 | marginX    | no | `Number`          | 20       | margin for X axis in pixel |
 | marginY    | no | `Number`           | 20            | margin for Y axis in pixel |
 | maxTextWidth    | no | `Number`           | -1            | Max node text width (in pixel) to be displayed, if -1 text is not truncated.| 
-| nodeClass    | no | `String`           | 'graph'            | class to be applied to the root div. Useful when custom CSS rules have to be applied. | 
+| rootClass    | no | `String`           | 'graph'            | class to be applied to the root div. Useful when custom CSS rules have to be applied. | 
 
 
 ## Events
@@ -192,7 +192,7 @@ vue-semantic-modal
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:9000
 npm run dev
 
 # build for production with minification

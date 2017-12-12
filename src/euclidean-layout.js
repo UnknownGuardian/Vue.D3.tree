@@ -27,5 +27,14 @@ export default {
       rotate: 0,
       anchor: !children ? 'start' : 'end'
     }
+  },
+
+  transformImage (img, children) {
+    return {
+      x: 100,
+      y: -32,
+      rotate: 0,
+      anchor: !children ? 'start' : 'start'
+    }
   }
 }
