@@ -176,7 +176,7 @@ export default {
 
       const updateLinks = links.enter().append('path').attr('class', 'linktree')
       const node = this.internaldata.g.selectAll('.nodetree').data(root.descendants(), d => d.id)
-      const newNodes = node.enter().append('g').attr('class', 'nodetree').attr('data-extraclass3', d => (d.data.classes || []).join(' '))
+      const newNodes = node.enter().append('g').attr('class', 'nodetree').attr('data-c', d => (d.data.classes || []).join(' '))
       const allNodes = newNodes.merge(node)
 
       removeTextAndGraph(node)
@@ -218,7 +218,7 @@ export default {
         .on('click', this.onNodeClick)
 
       // added by Matt
-      allNodes.attr('data-extraclass', d => (d.data.classes || []).join(' '))
+      allNodes.attr('data-c', d => (d.data.classes || []).join(' '))
 
       const allNodesPromise = toPromise(allNodes.transition().duration(this.duration)
         .attr('transform', d => translate(d, this.layout))
