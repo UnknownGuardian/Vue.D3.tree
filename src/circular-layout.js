@@ -52,5 +52,13 @@ export default {
       rotate: d.x < 180 ? d.x - 90 : d.x + 90,
       anchor: d.x < 180 === !children ? 'start' : 'end'
     }
+  },
+
+  transformImage(img, children) {
+    return {
+      x: d.x < 180 === !children ? 6 : -6,
+      rotate: d.x < 180 ? d.x - 90 : d.x + 90,
+      anchor: d.x < 180 === !children ? 'start' : 'end'
+    }
   }
 }

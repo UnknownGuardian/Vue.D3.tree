@@ -3,6 +3,7 @@
   </div>
 </template>
 <script>
+var toCss = require('to-css')
 import resize from 'vue-resize-directive'
 import euclidean from './euclidean-layout'
 import circular from './circular-layout'
@@ -176,7 +177,7 @@ export default {
 
       const updateLinks = links.enter().append('path').attr('class', 'linktree')
       const node = this.internaldata.g.selectAll('.nodetree').data(root.descendants(), d => d.id)
-      const newNodes = node.enter().append('g').attr('class', 'nodetree').attr('data-c', d => (d.data.classes || []).join(' '))
+      const newNodes = node.enter().append('g').attr('class', 'nodetree').attr('data-c', d => (d.data.classes || []).join(' ')).attr('style', d => toCss(d.data.style || {}))
       const allNodes = newNodes.merge(node)
 
       removeTextAndGraph(node)
@@ -496,7 +497,7 @@ export default {
 </script>
 
 <style>
-.treeclass .nodetree  circle {
+.nodetree  circle {
   fill: #999;
   r: 2.5;
 }

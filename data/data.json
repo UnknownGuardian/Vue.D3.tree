@@ -12,15 +12,18 @@
                                             "children": [],
                                             "id": 53,
                                             "text": "DiscogsEntityType",
-                                            "classes": [
-                                                "red"
-                                            ],
+                                            "style": {
+                                                "fill":"blue !important"
+                                            },
                                             "image": "http://phylopic.org/assets/images/submissions/804528e1-9a95-4ad4-801d-ae5a6627c11e.thumb.png"
                                         },
                                         {
                                             "children": [],
                                             "id": 50,
-                                            "text": "DiscogsImageFormatType"
+                                            "text": "DiscogsImageFormatType",
+                                            "classes": [
+                                                "red"
+                                            ]
                                         },
                                         {
                                             "children": [],
