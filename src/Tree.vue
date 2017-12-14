@@ -7,7 +7,7 @@ var toCss = require('to-css')
 import resize from 'vue-resize-directive'
 import euclidean from './euclidean-layout'
 import circular from './circular-layout'
-import {compareString, anchorTodx, anchorTody, drawLink, toPromise, findInParents, mapMany, removeTextAndGraph, translate} from './d3-utils'
+import {compareString, anchorTodx, /* anchorTody, */drawLink, toPromise, findInParents, mapMany, removeTextAndGraph, translate} from './d3-utils'
 
 import * as d3 from 'd3'
 
@@ -194,6 +194,7 @@ export default {
         })
 
       // added by matt
+      /*
       const img = allNodes.append('svg:image')
         .attr('dy', '.35em')
         .attr('xlink:href', d => d.data.image || '')
@@ -203,6 +204,7 @@ export default {
           this.redraw()
           this.$emit('clicked', {element: d, data: d.data})
         })
+      */
 
       updateLinks.attr('d', d => drawLink(originBuilder(d), originBuilder(d), this.layout))
 
@@ -232,6 +234,7 @@ export default {
           .attr('transform', d => 'rotate(' + (d.textInfo ? d.textInfo.rotate : 0) + ')')
 
       // added by Matt
+      /*
       img.attr('x', d => { return d.imgInfo ? d.imgInfo.x : 0 })
           .attr('y', d => { return d.imgInfo ? d.imgInfo.y : 0 })
           .attr('width', 64)
@@ -239,7 +242,7 @@ export default {
           .attr('dx', function (d) { return d.imgInfo ? anchorTodx(d.imgInfo.anchor, this) : 0 })
           .attr('dy', function (d) { return d.imgInfo ? anchorTody(d.imgInfo.anchor, this) : 0 })
           .attr('transform', d => 'rotate(' + (d.imgInfo ? d.imgInfo.rotate : 0) + ')')
-
+*/
       const {transformText, transformImage} = this.layout
       allNodes.each((d) => {
         d.textInfo = transformText(d, hasChildren(d))
@@ -252,12 +255,14 @@ export default {
           .attr('transform', d => `rotate(${d.textInfo.rotate})`))
 
       // added by Matt
+      /*
       const imgTransition = toPromise(img.transition().duration(this.duration)
           .attr('x', d => d.imgInfo.x)
           .attr('y', d => d.imgInfo.y)
           .attr('dx', function (d) { return anchorTodx(d.imgInfo.anchor, this) })
           .attr('dy', function (d) { return anchorTody(d.imgInfo.anchor, this) })
           .attr('transform', d => `rotate(${d.imgInfo.rotate})`))
+      */
 
       allNodes.each((d) => {
         d.x0 = d.x
@@ -275,7 +280,7 @@ export default {
       const last = Math.max(...extremeNodes.map(node => node.getComputedTextLength())) + 6
       const first = text.node().getComputedTextLength() + 6
       if (last <= this.maxTextLenght.last && first <= this.maxTextLenght.first) {
-        return Promise.all([allNodesPromise, exitingNodesPromise, textTransition, imgTransition, updateAndNewLinksPromise, exitingLinksPromise])
+        return Promise.all([allNodesPromise, exitingNodesPromise, textTransition, /* imgTransition, */ updateAndNewLinksPromise, exitingLinksPromise])
       }
 
       this.maxTextLenght = {first, last}
