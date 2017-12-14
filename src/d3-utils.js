@@ -7,6 +7,15 @@ function anchorTodx (d, el) {
   return 0
 }
 
+function anchorTody (d, el) {
+  if (d === 'middle') {
+    return -el.getBBox().height / 2
+  } else if (d === 'end') {
+    return -el.getBBox().height
+  }
+  return 0
+}
+
 function drawLink (source, target, { transformNode }) {
   return 'M' + transformNode(source.x, source.y) +
     'C' + transformNode(source.x, (source.y + target.y) / 2) +
@@ -115,6 +124,7 @@ function updateTexts (selection, maxLength) {
 
 export {
   anchorTodx,
+  anchorTody,
   compareString,
   compareNode,
   drawLink,
